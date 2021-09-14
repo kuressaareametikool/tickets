@@ -17,12 +17,13 @@ class StudentImport implements ToCollection, WithHeadingRow
      */
     public function collection(Collection $collection)
     {
-        $collection->each(function($row){
-            if (Storage::exists('unzipped/'.$row['opilase_isikukood'].'.jpg')) {
+        $collection->each(function ($row) {
+            if (Storage::exists('unzipped/' . $row['opilase_isikukood'] . '.jpg')) {
                 if (Ticket::where('code', $row['opilase_isikukood'])->exists()) {
                     Ticket::where('code', $row['opilase_isikukood'])->update([
                         'name' => $row['opilase_nimi'],
-                        'picture' => Storage::get('unzipped/'.$row['opilase_isikukood'].'.jpg'),
+                        'picture' => Storage::get('unzipped/' . $row['opilase_isikukood'] . '.jpg'),
+                        'status' => 'I'
                     ]);
 
                     return 0;
@@ -31,7 +32,7 @@ class StudentImport implements ToCollection, WithHeadingRow
                 Ticket::create([
                     'name' => $row['opilase_nimi'],
                     'code' => $row['opilase_isikukood'],
-                    'picture' => Storage::get('unzipped/'.$row['opilase_isikukood'].'.jpg'),
+                    'picture' => Storage::get('unzipped/' . $row['opilase_isikukood'] . '.jpg'),
                     'ticket_nr' => $this->getLatestTiceketNr() + 1,
                     'code_3' => $this->generateNewCode(),
                     'status' => 'I'
@@ -50,6 +51,6 @@ class StudentImport implements ToCollection, WithHeadingRow
 
     protected function generateNewCode()
     {
-        return intval('92332021000'. $this->getLatestTiceketNr() + 1 .'8');    
+        return intval('92332021000' . $this->getLatestTiceketNr() + 1 . '8');
     }
 }
